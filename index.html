@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Drone Flight Planner</title>
+  <meta name="description" content="Drone Flight Planner">
+  <meta name="author" content="Julien Von Oetinger">
+
+  <link rel="stylesheet" href="css/main.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+
+</head>
+
+<body>
+  <div id="map"></div>
+  <div id="menu">
+    <div id="create-menu" class="menu-item">
+      <div class="glyphicon glyphicon-plus"></div>
+      <div>Create</div>
+    </div>
+    <div id="list-menu" class="menu-item">
+      <div class="glyphicon glyphicon-list"></div>
+      <div>List</div>
+    </div>
+  </div>
+  <div id="sub-menu">
+    <div id="create-sub-menu" class="sub-menu-item">
+      <div class="title">New Plan</div>
+      <div>
+        <div>Name</div>
+        <input type="text" id="new-plan-name" />
+      </div>
+      <div>
+        <button id="save-button" type="button">Save</button>
+      </div>
+    </div>
+    <div id="list-sub-menu" class="sub-menu-item">
+      <div class="title">Plans</div>
+      <ul class="list-group" id="plans">
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="js/app.js"></script>
+  <script src="js/drone_flight_planner.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_Imq3Dc9XSlM8MfJsY3r_tae6BEv_WXA&callback=init&libraries=drawing"></script>
+</body>
+
+</html>
