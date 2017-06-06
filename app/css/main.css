@@ -1,20 +1,24 @@
 * {
   font-family: 'Roboto', sans-serif;
 }
-html, body {
+
+html,
+body {
   padding: 0px;
   margin: 0px;
   overflow: hidden;
 }
+
 #map {
   position: absolute;
-  left: 0px width: -webkit-calc(100% - 300px);
+  left: 0px;
+  width: -webkit-calc(100% - 300px);
   width: -moz-calc(100% - 300px);
   width: calc(100% - 300px);
   height: 100vh;
-  top: 0px;
   border-right: 1px solid #3498DB;
 }
+
 #menu {
   width: 50px;
   right: 250px;
@@ -22,48 +26,77 @@ html, body {
   position: absolute;
   height: 100vh;
 }
+
 #menu .menu-item {
   color: #ECF0F1;
   text-align: center;
   padding: 5px;
   cursor: pointer;
 }
+
 #menu .menu-item.active {
   background-color: #2980B9;
 }
+
 #menu .menu-item .glyphicon {
   font-size: 24px;
 }
+
 #sub-menu {
   right: 0px;
   width: 250px;
   height: 100vh;
-  overflow: auto;
+  overflow-x: visible;
+  overflow-y: auto;
   border-radius: 0px;
   position: absolute;
   background-color: #2980B9;
   color: white;
 }
+
 #sub-menu .actions {
   text-align: right;
   padding: 10px;
 }
+
 #sub-menu .list-group-item {
   border-radius: 0px;
   color: #2c2c2c;
   cursor: pointer;
 }
 
+#sub-menu .list-group-item .delete {
+  display: none;
+}
+
 #sub-menu .list-group-item:hover {
   background-color: rgb(197, 216, 228);
 }
+
 #sub-menu .list-group-item.active {
-    background-color: #E74C3C;
-    background-image: initial;
-    color: white;
-    text-shadow: none;
-    border-color: white;
+  background-color: #2C3E50;
+  background-image: initial;
+  color: white;
+  text-shadow: none;
+  border-color: white;
+  padding-right: 50px;
 }
+
+#sub-menu .list-group-item.active .delete {
+    display: block;
+    position: absolute;
+    right: 0px;
+    background-color: #E74C3C;
+    height: 100%;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-bottom: 1px solid #E74C3C;
+    border-left: 1px solid white;
+    border-top: 1px solid #E74C3C;
+    top: 0px;
+}
+
 #sub-menu .title {
   text-align: center;
   line-height: 2em;
@@ -71,12 +104,15 @@ html, body {
   font-size: 2em;
   font-weight: 300;
 }
+
 .hidden {
   display: none;
 }
+
 #sub-menu .sub-menu-item {
   padding: 0.5em;
 }
+
 #sub-menu .sub-menu-item input {
   width: 100%;
   color: black;
@@ -84,6 +120,7 @@ html, body {
   padding: 0.2em;
   font-size: 1.5em;
 }
+
 button {
   background-color: #2C3E50;
   border: none;
@@ -96,11 +133,11 @@ button {
 }
 
 #new-plan-error {
-    background-color: #E74C3C;
-    color: white;
-    display: none;
-    padding: 0.5em;
-    width: 100%;
-    margin: 0.5em 0;
-    font-size: 0.8em;
+  background-color: #E74C3C;
+  color: white;
+  display: none;
+  padding: 0.5em;
+  width: 100%;
+  margin: 0.5em 0;
+  font-size: 0.8em;
 }

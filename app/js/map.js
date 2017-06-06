@@ -125,7 +125,6 @@ var DroneFlightPlannerMap = (function(_) {
   function _createNewPolyline() {
     return new _google.maps.Polyline({
       path: _path,
-      geodesic: true,
       strokeColor: '#E74C3C',
       strokeOpacity: 1,
       strokeWeight: 2,

@@ -31,7 +31,8 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
     _$listMenu.removeClass('active');
     _$createSubMenu.removeClass('hidden');
     _$listSubMenu.addClass('hidden');
-    _$newPlanNameInput.val('My New Plan');
+    _$newPlanNameInput.val('');
+    _$newPlanError.html('').hide();
     map.startPlan();
   }
 
@@ -69,7 +70,7 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
    * @returns {jQuery} The generated jQuery Object
    */
   function _addNewPlanListElement(pName, pCoordinates) {
-    var $li = $('<li class="plan list-group-item"><span class="badge">' + pCoordinates.length + '</span>' + pName + '</li>');
+    var $li = $('<li class="plan list-group-item"><span class="delete glyphicon glyphicon-trash"></span><span class="badge">' + pCoordinates.length + '</span>' + pName + '</li>');
     // we attach the data to the jQuery data map
     $li.data('coordinates', pCoordinates);
     $li.data('name', pName);
@@ -115,11 +116,18 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
     $li.siblings().removeClass('active');
   }
 
+  function _deletePlanAction(pEvent){
+    var $li = $(pEvent.currentTarget).parent();
+    var name = $li.data('name');
+    dataSource.deletePlan(name).then(_switchToListMode);
+  }
+
   /**
    * Set up the events on the elements
    */
   function _setupEvents() {
     _$list.on('click', '.plan', _planClickAction);
+    _$list.on('click', '.delete', _deletePlanAction);
     _$listMenu.on('click', _switchToListMode);
     _$createMenu.on('click', _switchToCreateMode);
     $('#save-button').on('click', _saveAction);

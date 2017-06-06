@@ -105,9 +105,6 @@
       createPlan: function(pName, pCoordinates) {
         // here should be a proper call to some api
         // that return if the create plan has been successfully created
-
-        //we check first for duplicate names
-
         return new Promise(function(resolve, reject) {
           var noDuplicates = _.every(_DATASOURCE, function(dataItem) {
             return dataItem.name !== pName;
@@ -122,6 +119,14 @@
           } else {
             reject('A plan this name already exists');
           }
+        });
+      },
+      deletePlan: function(pName) {
+        return new Promise(function(resolve) {
+          _DATASOURCE = _.reject(_DATASOURCE, function(dataItem){
+            return dataItem.name === pName;
+          });
+          resolve();
         });
       }
     };
