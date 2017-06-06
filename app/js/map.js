@@ -13,56 +13,58 @@ var DroneFlightPlannerMap = (function(_) {
 
   /**
    * Init the Drone Flight Planner Map
-   * @param  {[type]} the id of the element that will 
-   * @param  {[type]} a callback function that must be called once the map is initialized
+   * @param  {String} the id of the element that will 
+   * @return {Promise} a promise
    */
-  function _init(pElement, pCallback) {
+  function _init(pElement) {
 
     _google = window.google;
 
-    // we check the google map is loaded
-    if (_google) {
-      _marker_icon_option = {
-        path: _google.maps.SymbolPath.CIRCLE,
-        fillColor: '#E74C3C',
-        fillOpacity: 1,
-        scale: 4.5,
-        strokeColor: 'white',
-        strokeWeight: 1
-      };
+    return new Promise(function(resolve, reject) {
 
-      _map = new _google.maps.Map(document.getElementById(pElement), {
-        center: {
-          lat: 46.5190557,
-          lng: 6.5667576
-        },
-        zoom: 18
-      });
+      // we check the google map is loaded
+      if (_google) {
+        _marker_icon_option = {
+          path: _google.maps.SymbolPath.CIRCLE,
+          fillColor: '#E74C3C',
+          fillOpacity: 1,
+          scale: 4.5,
+          strokeColor: 'white',
+          strokeWeight: 1
+        };
 
-      _drawingManager = new _google.maps.drawing.DrawingManager({
-        drawingMode: _google.maps.drawing.OverlayType.MARKER,
-        drawingControl: false,
-        markerOptions: {
-          icon: _marker_icon_option
-        },
+        _map = new _google.maps.Map(document.getElementById(pElement), {
+          center: {
+            lat: 46.5190557,
+            lng: 6.5667576
+          },
+          zoom: 18
+        });
 
-      });
+        _drawingManager = new _google.maps.drawing.DrawingManager({
+          drawingMode: _google.maps.drawing.OverlayType.MARKER,
+          drawingControl: false,
+          markerOptions: {
+            icon: _marker_icon_option
+          },
 
-      _google.maps.event.addListener(_drawingManager, 'markercomplete', function(marker) {
-        _path.push(marker.position);
-        _polyline.setPath(_path);
-      });
+        });
 
-      _google.maps.event.addListener(_drawingManager, 'overlaycomplete', function(e) {
-        _overlays.push(e);
-      });
+        _google.maps.event.addListener(_drawingManager, 'markercomplete', function(marker) {
+          _path.push(marker.position);
+          _polyline.setPath(_path);
+        });
 
-      if (pCallback) {
-        pCallback();
+        _google.maps.event.addListener(_drawingManager, 'overlaycomplete', function(e) {
+          _overlays.push(e);
+        });
+
+        resolve();
+      } else {
+        reject('Google Map is not loaded');
       }
-    } else {
-      console.error('Google Map is not loaded');
-    }
+
+    });
   }
 
   /**

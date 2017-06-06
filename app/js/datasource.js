@@ -95,34 +95,34 @@
     }];
 
     return {
-      getPlans: function(pCallback) {
+      getPlans: function() {
         // here should be a proper call to some api
         // but for the sake of the example we return an array
-        if (pCallback) {
-          pCallback(_DATASOURCE);
-        }
+        return new Promise(function(resolve){
+          resolve(_DATASOURCE);
+        });
       },
-      createPlan: function(pName, pCoordinates, pCallback) {
+      createPlan: function(pName, pCoordinates) {
         // here should be a proper call to some api
         // that return if the create plan has been successfully created
 
         //we check first for duplicate names
 
-        var noDuplicates = _.every(_DATASOURCE, function(dataItem) {
-          return dataItem.name !== pName;
-        });
-
-        if (noDuplicates) {
-          _DATASOURCE.push({
-            name: pName,
-            coordinates: pCoordinates
+        return new Promise(function(resolve, reject) {
+          var noDuplicates = _.every(_DATASOURCE, function(dataItem) {
+            return dataItem.name !== pName;
           });
-          pCallback(true);
-        } else {
-          pCallback('A plan this name already exists');
-        }
 
-
+          if (noDuplicates) {
+            _DATASOURCE.push({
+              name: pName,
+              coordinates: pCoordinates
+            });
+            resolve();
+          } else {
+            reject('A plan this name already exists');
+          }
+        });
       }
     };
 

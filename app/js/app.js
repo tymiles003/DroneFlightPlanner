@@ -52,7 +52,7 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
     var $li = null;
 
     // we fetch the list of plans from the server
-    dataSource.getPlans(function(plans) {
+    dataSource.getPlans().then(function(plans) {
       _.each(plans, function(plan) {
         $li = _addNewPlanListElement(plan.name, plan.coordinates);
         if (plan.name === pName) {
@@ -87,15 +87,12 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
     if (name.length > 0) {
       if (coordinates.length > 0) {
 
-        dataSource.createPlan(name, coordinates, function(response) {
-          // if the plan has been sucessfully created we got to the plans list
-          if (response === true) {
+        dataSource.createPlan(name, coordinates).then(function() {
             _$newPlanError.html('').hide();
             map.stopPlan();
             _switchToListMode(name);
-          } else { // we display the error message (this is a very basic error handling)
-            _$newPlanError.html(response).show();
-          }
+        }, function(error){
+          _$newPlanError.html(error).show();
         });
 
       } else {
@@ -132,7 +129,7 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
    * Called as a callback when the google map api is loaded 
    */
   function _init() {
-    map.init('map', function() {
+    map.init('map').then(function() {
       _cacheElements();
       _setupEvents();
       _switchToListMode();
