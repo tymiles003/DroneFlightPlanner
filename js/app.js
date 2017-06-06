@@ -6,6 +6,7 @@ var _$listMenu = null;
 var _$createSubMenu = null;
 var _$listSubMenu = null;
 var _$newPlanNameInput = null;
+var _$newPlanError = null;
 
 function _cacheElements() {
   _$list = $('#plans');
@@ -14,6 +15,7 @@ function _cacheElements() {
   _$createSubMenu = $('#create-sub-menu');
   _$listSubMenu = $('#list-sub-menu');
   _$newPlanNameInput = $('#new-plan-name');
+  _$newPlanError = $('#new-plan-error');
 }
 
 function _switchToCreateMode() {
@@ -30,40 +32,62 @@ function _switchToListMode() {
   _$listMenu.addClass('active');
   _$createSubMenu.addClass('hidden');
   _$listSubMenu.removeClass('hidden');
+  _$list.children().removeClass('active');
   DroneFlightPlanner.stopPlan();
 }
 
-function _setupEvents() {
-
-  _$list.on('click', '.plan', function() {
-    var $li = $(this);
-    var plan = $li.data('plan');
-    DroneFlightPlanner.showPlan(plan);
-    $li.addClass('active');
-    $li.siblings().removeClass('active');
-  });
-
-  _$listMenu.on('click',_switchToListMode);
-  _$createMenu.on('click', _switchToCreateMode);
-
-  $('#save-button').on('click', function() {
-    var plan = DroneFlightPlanner.stopPlan();
-    var name = _$newPlanNameInput.val();
-
-    var $li = $('<li class="plan list-group-item">' + name + '</li>');
-    $li.data('plan', plan);
-    $li.data('name', name);
-    _$list.append($li);
-    _switchToListMode();
-    $li.trigger('click');
-  });
-
+function _addNewPlanListElement(name, coordinates) {
+  var $li = $('<li class="plan list-group-item">' + name + '</li>');
+  $li.data('coordinates', coordinates);
+  $li.data('name', name);
+  _$list.append($li);
+  return $li;
 }
 
+function _saveAction() {
+  var coordinates = DroneFlightPlanner.getPlan();
+  var name = _$newPlanNameInput.val();
+
+  if (name.length > 0) {
+    if (coordinates.length > 0) {
+      coordinates = DroneFlightPlanner.stopPlan();
+      var $li = _addNewPlanListElement(name, coordinates);
+      _switchToListMode();
+      $li.trigger('click');
+      _$newPlanError.html('').hide();
+    } else {
+      _$newPlanError.html('A plan must contain at least one point').show();
+    }
+  } else {
+    _$newPlanError.html('The name is required').show();
+  }
+}
+
+function _planClickAction(event) {
+  var $li = $(event.currentTarget);
+  var coordinates = $li.data('coordinates');
+  DroneFlightPlanner.showPlan(coordinates);
+  $li.addClass('active');
+  $li.siblings().removeClass('active');
+}
+
+function _setupEvents() {
+  _$list.on('click', '.plan', _planClickAction);
+  _$listMenu.on('click', _switchToListMode);
+  _$createMenu.on('click', _switchToCreateMode);
+  $('#save-button').on('click', _saveAction);
+}
+
+function _loadSamplePlans() {
+  _addNewPlanListElement('Example 1', EXAMPLE1);
+  _addNewPlanListElement('Example 2', EXAMPLE2);
+  _addNewPlanListElement('Example 3', EXAMPLE3);
+}
 
 function init() {
   DroneFlightPlanner.init('map');
   _cacheElements();
   _setupEvents();
-  _switchToCreateMode();
+  _switchToListMode();
+  _loadSamplePlans();
 }

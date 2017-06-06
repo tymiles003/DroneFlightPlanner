@@ -54,6 +54,27 @@ var DroneFlightPlanner = (function() {
 
   }
 
+  function _getPathCoordinates() {
+    var coordinates = [];
+
+    for (var index in _path ){
+      coordinates.push({
+        lat : _path[index].lat(),
+        lng : _path[index].lng()
+      });
+    }
+
+    return coordinates;
+  }
+
+  function _parseCoordinates(coordinates) {
+    var path = [];
+    for ( var index in coordinates ) {
+      path.push(new google.maps.LatLng(coordinates[index].lat,coordinates[index].lng));
+    }
+    return path;
+  }
+
   function _clear() {
     if (_polyline) {
       _polyline.setMap(null);
@@ -86,11 +107,11 @@ var DroneFlightPlanner = (function() {
   }
 
   function _getPlan() {
-    return _path;
+    return _getPathCoordinates();
   }
 
   function _stopPlan() {
-    var plan = _path;
+    var plan = _getPathCoordinates();
     _clear();
     _drawingManager.setMap(null);
     for (var index in _overlays) {
@@ -100,18 +121,18 @@ var DroneFlightPlanner = (function() {
     return plan;
   }
 
-  function _showPlan(plan) {
+  function _showPlan(coordinates) {
 
     _clear();
 
-    _path = plan;
+    _path = _parseCoordinates(coordinates);
 
     // then we render the new plan
     _polyline = _createNewPolyline();
 
-    for (var index in plan) {
+    for (var index in _path) {
       var marker = new window.google.maps.Marker({
-        position: plan[index],
+        position: _path[index],
         map: _map,
         icon: _marker_icon_option
       });
