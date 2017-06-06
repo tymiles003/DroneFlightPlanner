@@ -10,6 +10,7 @@ var DroneFlightPlannerMap = (function(_) {
   var _overlays = [];
   var _marker_icon_option = null;
   var _google = null;
+  var _customEventsCallbacks = {};
 
   /**
    * Init the Drone Flight Planner Map
@@ -58,6 +59,9 @@ var DroneFlightPlannerMap = (function(_) {
         _google.maps.event.addListener(_drawingManager, 'overlaycomplete', function(e) {
           _overlays.push(e);
         });
+
+
+
 
         resolve();
       } else {
@@ -110,6 +114,7 @@ var DroneFlightPlannerMap = (function(_) {
     }
 
     _.each(_markers, function(marker) {
+      _google.maps.event.clearInstanceListeners(marker);
       marker.setMap(null);
     });
 
@@ -176,7 +181,7 @@ var DroneFlightPlannerMap = (function(_) {
     // then we render the new plan
     _polyline = _createNewPolyline();
 
-    _.each(_path, function(latLng) {
+    _.each(_path, function(latLng, index) {
       var marker = new _google.maps.Marker({
         position: latLng,
         map: _map,
@@ -184,7 +189,29 @@ var DroneFlightPlannerMap = (function(_) {
         draggable: true
       });
       _markers.push(marker);
+      _google.maps.event.addListener(marker, 'dragend', function(event) {
+        _path[index] = event.latLng;
+        _polyline.setMap(null);
+        _polyline = _createNewPolyline();
+        _trigger('edited');
+      });
     });
+  }
+
+  function _on(event, callback){
+    if ( _customEventsCallbacks[event] === undefined ) {
+      _customEventsCallbacks[event] = [];
+    }
+    _customEventsCallbacks[event].push(callback);
+  }
+
+  function _trigger(event){
+    var callbacks = _customEventsCallbacks[event];
+    if ( callbacks ){
+      _.each(callbacks, function(callback){
+        callback();
+      });
+    }
   }
 
   /**
@@ -195,7 +222,8 @@ var DroneFlightPlannerMap = (function(_) {
     startPlan: _startPlan,
     getPlan: _getPlan,
     stopPlan: _stopPlan,
-    showPlan: _showPlan
+    showPlan: _showPlan,
+    on: _on,
   };
 
 })(_);

@@ -65,7 +65,11 @@ body {
   cursor: pointer;
 }
 
-#sub-menu .list-group-item .delete {
+#sub-menu .list-group-item .delete, #sub-menu .list-group-item.edited .delete {
+  display: none;
+}
+
+#sub-menu .list-group-item .update {
   display: none;
 }
 
@@ -94,6 +98,21 @@ body {
     border-bottom: 1px solid #E74C3C;
     border-left: 1px solid white;
     border-top: 1px solid #E74C3C;
+    top: 0px;
+}
+
+#sub-menu .list-group-item.edited .update {
+    display: block;
+    position: absolute;
+    right: 0px;
+    background-color: green;
+    height: 100%;
+    width: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-bottom: 1px solid green;
+    border-left: 1px solid white;
+    border-top: 1px solid green;
     top: 0px;
 }
 
@@ -140,4 +159,9 @@ button {
   width: 100%;
   margin: 0.5em 0;
   font-size: 0.8em;
+}
+
+.help {
+  font-style: italic;
+  font-style: 0.8em;
 }

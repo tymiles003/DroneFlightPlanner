@@ -98,7 +98,7 @@
       getPlans: function() {
         // here should be a proper call to some api
         // but for the sake of the example we return an array
-        return new Promise(function(resolve){
+        return new Promise(function(resolve) {
           resolve(_DATASOURCE);
         });
       },
@@ -123,12 +123,23 @@
       },
       deletePlan: function(pName) {
         return new Promise(function(resolve) {
-          _DATASOURCE = _.reject(_DATASOURCE, function(dataItem){
+          _DATASOURCE = _.reject(_DATASOURCE, function(dataItem) {
             return dataItem.name === pName;
           });
           resolve();
         });
-      }
+      },
+      updatePlan: function(pName, pCoordinates) {
+        return new Promise(function(resolve, reject) {
+          var dataItem = _.findWhere(_DATASOURCE, { name: pName });
+          if ( dataItem ){
+            dataItem.coordinates = pCoordinates;
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      },
     };
 
   })(_);

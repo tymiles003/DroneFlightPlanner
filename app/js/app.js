@@ -70,7 +70,7 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
    * @returns {jQuery} The generated jQuery Object
    */
   function _addNewPlanListElement(pName, pCoordinates) {
-    var $li = $('<li class="plan list-group-item"><span class="delete glyphicon glyphicon-trash"></span><span class="badge">' + pCoordinates.length + '</span>' + pName + '</li>');
+    var $li = $('<li class="plan list-group-item"><span class="delete glyphicon glyphicon-trash"></span><span class="update glyphicon glyphicon-floppy-disk"></span><span class="badge">' + pCoordinates.length + '</span><span>' + pName + '</span></li>');
     // we attach the data to the jQuery data map
     $li.data('coordinates', pCoordinates);
     $li.data('name', pName);
@@ -89,10 +89,10 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
       if (coordinates.length > 0) {
 
         dataSource.createPlan(name, coordinates).then(function() {
-            _$newPlanError.html('').hide();
-            map.stopPlan();
-            _switchToListMode(name);
-        }, function(error){
+          _$newPlanError.html('').hide();
+          map.stopPlan();
+          _switchToListMode(name);
+        }, function(error) {
           _$newPlanError.html(error).show();
         });
 
@@ -114,12 +114,30 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
     map.showPlan(coordinates);
     $li.addClass('active');
     $li.siblings().removeClass('active');
+    $li.siblings().removeClass('edited');
   }
 
-  function _deletePlanAction(pEvent){
+  /**
+   * Executed when the user click on the delete icon of the selected Plan
+   * @param  {Object} the event that is triggered
+   */
+  function _deletePlanAction(pEvent) {
     var $li = $(pEvent.currentTarget).parent();
     var name = $li.data('name');
     dataSource.deletePlan(name).then(_switchToListMode);
+  }
+
+  /**
+   * Executed when the user click on the save icon of the selected Plan
+   * @param  {Object} the event that is triggered
+   */
+  function _updatePlanAction(pEvent) {
+    var $li = $(pEvent.currentTarget).parent();
+    var name = $li.data('name');
+    var coordinates = map.getPlan();
+    dataSource.updatePlan(name, coordinates).then(function(){
+      _switchToListMode(name);
+    });
   }
 
   /**
@@ -128,9 +146,16 @@ var DroneFlightPlannerApp = (function(map, dataSource, _) {
   function _setupEvents() {
     _$list.on('click', '.plan', _planClickAction);
     _$list.on('click', '.delete', _deletePlanAction);
+    _$list.on('click', '.update', _updatePlanAction);
     _$listMenu.on('click', _switchToListMode);
     _$createMenu.on('click', _switchToCreateMode);
     $('#save-button').on('click', _saveAction);
+
+    // detect when a point of a selected plan is changed
+    map.on("edited", function() {
+      var $li = _$list.find('.active');
+      $li.addClass('edited');
+    });
   }
 
   /**
